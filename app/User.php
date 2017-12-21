@@ -31,4 +31,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\ProviderUser');
     }
+
+    public function bookmarks()
+    {
+        return $this->hasMany('App\Models\Bookmark');
+    }
 }

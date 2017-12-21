@@ -22,3 +22,5 @@ Route::get('auth/twitter/callback', 'Auth\TwitterAuthController@handleProviderCa
 Route::get('auth/twitter/logout', 'Auth\TwitterAuthController@logout');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('bookmarks', 'BookmarkController');

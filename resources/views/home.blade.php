@@ -1,23 +1,19 @@
-@extends('layouts.app')
+@extends('layouts.layout')
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
-
-                <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
-                </div>
-            </div>
-        </div>
-    </div>
+    @isset($bookmarks)
+        <ul>
+        @foreach ($bookmarks as $bookmark)
+            <li>
+                <dl>
+                    <dt><a href="{{ $bookmark->site->url }}">{{ $bookmark->site->title }}</a></dt>
+                    <dd>
+                    </dd>
+                </dl>
+            </li>
+        @endforeach
+        </ul>
+    @endisset
 </div>
 @endsection

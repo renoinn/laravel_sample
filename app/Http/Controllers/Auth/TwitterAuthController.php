@@ -42,8 +42,12 @@ class TwitterAuthController extends Controller
             'provider_type' => 'twitter',
         ])->first();
 
-        if ($authUser){
-            return $authUser;
+        if ($authUser) {
+            $user = $authUser->user;
+            if($user) {
+                return $user;
+            }
+            throw new \Exception("cant find user");
         }
         
         // create user
