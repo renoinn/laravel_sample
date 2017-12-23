@@ -16,8 +16,8 @@ class CreateSitesTable extends Migration
         Schema::dropIfExists('sites');
         Schema::create('sites', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('url', 1024)->nullable();
-            $table->string('title', 500)->nullable();
+            $table->string('url', 1024);
+            $table->string('title', 500);
             $table->timestamps();
         });
     }

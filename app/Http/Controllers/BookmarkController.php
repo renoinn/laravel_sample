@@ -33,11 +33,32 @@ class BookmarkController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('bookmarks.create');
+        $url = $request->query('url');
+        $title = $request->query('title');
+        $site = Site::where([
+            'url' => $url,
+        ])->first();
+
+        if($site != null)
+        {
+            $user = Auth::user();
+            $bookmark = $user->bookmarks->where('site_id', $site->id)->first();
+
+            if($bookmark != null)
+            {
+                return redirect()->route('bookmarks.edit', $bookmark->first());
+            }
+        }
+
+        return view('bookmarks.create', [
+            'url' => $url,
+            'title' => $title,
+        ]);
     }
 
     /**

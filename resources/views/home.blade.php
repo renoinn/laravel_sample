@@ -16,4 +16,5 @@
         </ul>
     @endisset
 </div>
+<div><a href="javascript:location.href='{{ config('app.url') }}/bookmarks/create?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)">bookmarklet</a></div>
 @endsection
