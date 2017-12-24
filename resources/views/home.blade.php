@@ -7,8 +7,14 @@
         @foreach ($bookmarks as $bookmark)
             <li>
                 <dl>
-                    <dt><a href="{{ $bookmark->site->url }}">{{ $bookmark->site->title }}</a></dt>
+                    <dt><a href="{{ $bookmark->url }}">{{ $bookmark->title }}</a></dt>
                     <dd>
+                        @php
+                            $tags = json_decode($bookmark->tags, true);
+                        @endphp
+                        @foreach ($tags as $tag)
+                        <a href="{{ config('app.url') }}/tag/{{ $tag }}">{{ $tag }}</a>
+                        @endforeach
                     </dd>
                 </dl>
             </li>

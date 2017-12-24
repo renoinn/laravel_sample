@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookmark;
-use App\Models\Site;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,19 +39,13 @@ class BookmarkController extends Controller
     {
         $url = $request->query('url');
         $title = $request->query('title');
-        $site = Site::where([
-            'url' => $url,
-        ])->first();
 
-        if($site != null)
+        $user = Auth::user();
+        $bookmark = $user->bookmarks->where('url', $url)->first();
+
+        if($bookmark != null)
         {
-            $user = Auth::user();
-            $bookmark = $user->bookmarks->where('site_id', $site->id)->first();
-
-            if($bookmark != null)
-            {
-                return redirect()->route('bookmarks.edit', $bookmark->first());
-            }
+            return redirect()->route('bookmarks.edit', $bookmark);
         }
 
         return view('bookmarks.create', [
@@ -70,11 +63,11 @@ class BookmarkController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $site = Site::firstOrCreate(['url' => $request->input('url')], ['title' => $request->input('title')]);
 
         $bookmark = new Bookmark();
         $bookmark->user()->associate($user);
-        $bookmark->site()->associate($site);
+        $bookmark->url = $request->input('url');
+        $bookmark->title = $request->input('title');
         $bookmark->note = $request->input('note');
 
         $tags = $request->input('tags');
@@ -107,7 +100,9 @@ class BookmarkController extends Controller
      */
     public function edit(Bookmark $bookmark)
     {
-        //
+        return view('bookmarks.edit', [
+            'bookmark' => $bookmark,
+        ]);
     }
 
     /**
@@ -119,7 +114,19 @@ class BookmarkController extends Controller
      */
     public function update(Request $request, Bookmark $bookmark)
     {
-        //
+        $bookmark->url = $request->input('url');
+        $bookmark->title = $request->input('title');
+        $bookmark->note = $request->input('note');
+
+        $tags = $request->input('tags');
+        if(!empty($tags))
+        {
+            $tags_array = explode(',', trim($tags));
+            $bookmark->tags = json_encode($tags_array);
+        }
+
+        $bookmark->save();
+        header('location: '.$request->input('url'));
     }
 
     /**
@@ -130,6 +137,7 @@ class BookmarkController extends Controller
      */
     public function destroy(Bookmark $bookmark)
     {
-        //
+        $bookmark->delete();
+        return redirect('home');
     }
 }
