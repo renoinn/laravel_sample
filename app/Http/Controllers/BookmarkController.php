@@ -73,7 +73,7 @@ class BookmarkController extends Controller
         $tags = $request->input('tags');
         if(!empty($tags))
         {
-            $tags_array = explode(',', trim($tags));
+            $tags_array = explode(' ', trim($tags));
             $bookmark->tags = json_encode($tags_array);
         }
 

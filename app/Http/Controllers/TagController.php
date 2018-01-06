@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookmark;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class TagController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -18,16 +19,11 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function list($tag)
     {
         $user = Auth::user();
-        $bookmarks = $user->bookmarks()->paginate(20);
 
+        $bookmarks = Bookmark::where('user_id', $user->id)->hasTag($tag)->paginate(20);
         return view('home', [
             'bookmarks' => $bookmarks
         ]);
