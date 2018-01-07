@@ -15,7 +15,20 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
+    }
+
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        if (Auth::check())
+        {
+            return redirect('home');
+        }
+
+        return view('welcome');
     }
 
     /**
@@ -23,8 +36,13 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function home()
     {
+        if (!Auth::check())
+        {
+            return redirect('welcome');
+        }
+        
         $user = Auth::user();
         $bookmarks = $user->bookmarks()->paginate(20);
 

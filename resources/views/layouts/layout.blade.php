@@ -22,7 +22,7 @@
     <h1>SUDO.MKDIR.BOOKMARKS</h1>   
     @auth
     <span><img src="{{Auth::user()->profile_image_url}}" /></span>
-    <span><a href="/snapmark/logout">Logout</a></span>
+    <span><a href="/logout">Logout</a></span>
     @endauth                   
 </header>
 <main>

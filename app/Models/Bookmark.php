@@ -19,7 +19,7 @@ class Bookmark extends Model
         {
             $tag = [$tag];
         }
-        $json = json_encode($tag);
+        $json = json_encode($tag, JSON_UNESCAPED_UNICODE);
         return $query->whereRaw("JSON_CONTAINS(tags, '".$json."')");
     }
 }
