@@ -44,7 +44,7 @@ class HomeController extends Controller
         }
         
         $user = Auth::user();
-        $bookmarks = $user->bookmarks()->paginate(20);
+        $bookmarks = $user->bookmarks()->orderBy('created_at', 'desc')->paginate(20);
 
         return view('home', [
             'bookmarks' => $bookmarks

@@ -23,7 +23,7 @@ class TagController extends Controller
     {
         $user = Auth::user();
 
-        $bookmarks = Bookmark::where('user_id', $user->id)->hasTag($tag)->paginate(20);
+        $bookmarks = Bookmark::where('user_id', $user->id)->orderBy('created_at', 'desc')->hasTag($tag)->paginate(20);
         return view('home', [
             'bookmarks' => $bookmarks
         ]);

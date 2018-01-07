@@ -19,7 +19,7 @@
 </head>
 <body>
 <header>
-    <h1>SUDO.MKDIR.BOOKMARKS</h1>   
+    <h1><a href="/">SUDO.MKDIR.BOOKMARKS</a></h1>
     @auth
     <span><img src="{{Auth::user()->profile_image_url}}" /></span>
     <span><a href="/logout">Logout</a></span>
