@@ -36,4 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Bookmark');
     }
+
+    public function user_tags()
+    {
+        return $this->hasMany('App\Models\UserTags');
+    }
 }

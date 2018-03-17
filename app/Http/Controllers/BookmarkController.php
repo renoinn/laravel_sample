@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookmark;
+use App\Models\UserTags;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -71,13 +72,23 @@ class BookmarkController extends Controller
         $bookmark->note = $request->input('note');
 
         $tags = $request->input('tags');
-        if(!empty($tags))
+        $tags_array = [];
+        if (!empty($tags))
         {
             $tags_array = explode(' ', trim($tags));
             $bookmark->tags = json_encode($tags_array);
         }
 
-        $bookmark->save();
+
+        \DB::transaction(function() use($user, $bookmark, $tags_array) {
+            $bookmark->save();
+
+            if (!empty($tags_array)) {
+                foreach ($tags_array as $tag) {
+                    UserTags::incrementTagCount($user, $tag);
+                }
+            }
+        });
         header('location: '.$request->input('url'));
     }
 
@@ -119,13 +130,39 @@ class BookmarkController extends Controller
         $bookmark->note = $request->input('note');
 
         $tags = $request->input('tags');
+        $tags_array = [];
+        $old_tags_array = json_decode($bookmark->tags, true);
         if(!empty($tags))
         {
             $tags_array = explode(',', trim($tags));
             $bookmark->tags = json_encode($tags_array);
         }
 
-        $bookmark->save();
+        \DB::transaction(function() use($bookmark, $tags_array, $old_tags_array) {
+            $bookmark->save();
+
+            $user = Auth::user();
+            $intersect = array_intersect($tags_array, $old_tags_array);
+
+            foreach ($tags_array as $tag) {
+                if (in_array($tag, $intersect))
+                {
+                    continue;
+                }
+
+                UserTags::incrementTagCount($user, $tag);
+            }
+
+            foreach ($old_tags_array as $tag) {
+                if (in_array($tag, $intersect))
+                {
+                    continue;
+                }
+
+                UserTags::decrementTagCount($user, $tag);
+            }
+        });
+        
         header('location: '.$request->input('url'));
     }
 
